@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Koneksi;
+package koneksi;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +24,7 @@ public class Database {
 //                mypanel.load(new FileInputStream("lib/database.ini"));
 //                
 //                driver = mypanel.getProperty("DBDriver");   
-//                database = mypanel.getProperty("DBDatabase");
+//                Database = mypanel.getProperty("DBDatabase");
 //                user = mypanel.getProperty("DBUsername");
 //                pass = mypanel.getProperty("DBPassword");
                 driver = "com.mysql.cj.jdbc.Driver";
