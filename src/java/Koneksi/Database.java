@@ -28,7 +28,7 @@ public class Database {
 //                user = mypanel.getProperty("DBUsername");
 //                pass = mypanel.getProperty("DBPassword");
                 driver = "com.mysql.cj.jdbc.Driver";
-                database="jdbc:mysql://localhost/jwp";
+                database="jdbc:mysql://localhost/UAS_JWP";
                 user="Edelweiss";
                 pass="P4nd4_Expre55";
                 
