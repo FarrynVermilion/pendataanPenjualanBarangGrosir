@@ -48,11 +48,6 @@ public class DAO_Transaksi_barang {
             e.printStackTrace();
         }
     }
-    public void insertAll(ArrayList<Transaksi_barang> list) {
-        for (Transaksi_barang objTransaksi_barang : list) {
-            insert(objTransaksi_barang);
-        }
-    }
     
     // public void update(Transaksi_barang object){
     //     try {
@@ -81,7 +76,7 @@ public class DAO_Transaksi_barang {
         }
     }
     
-    public void deleteAllTransaction(String id_transaksi) {
+    public void deleteTransaction(String id_transaksi) {
         try {
             PreparedStatement st = conn.prepareStatement(DELETE_TRANSACTION);
             st.setString(1, id_transaksi);
@@ -93,11 +88,12 @@ public class DAO_Transaksi_barang {
         }
     }
     
-    public ArrayList<Transaksi_barang> getCari(String key) {
+    public ArrayList<Transaksi_barang> getCari(String transaksi,String barang) {
         ArrayList<Transaksi_barang> list = new ArrayList<>();
         try {
             PreparedStatement st = conn.prepareStatement(SELECT);
-            st.setString(1, "%" + key + "%");
+            st.setString(1, transaksi);
+            st.setString(2, barang);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Transaksi_barang objTransaksi_barang = new Transaksi_barang();

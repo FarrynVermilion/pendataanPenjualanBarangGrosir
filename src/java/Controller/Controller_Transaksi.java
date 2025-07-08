@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import model.Transaksi;
 import model.Transaksi_barang;
 import java.math.BigInteger;
+import Controller.Controller_Transaksi_barang;
 
 /**
  *
@@ -17,6 +18,7 @@ import java.math.BigInteger;
 public class Controller_Transaksi {
     DAO_Transaksi daoTransaksi = new DAO_Transaksi();
     DAO_Transaksi_barang daoTransaksiBarang = new DAO_Transaksi_barang();
+    Controller_Transaksi_barang controllerTransaksiBarang = new Controller_Transaksi_barang();
     public ArrayList<Transaksi> getAll(){
         return daoTransaksi.getAll();
     }
@@ -24,12 +26,9 @@ public class Controller_Transaksi {
         return daoTransaksi.getCari(key);
     }
     public void insertNewTransaksiDanTransaksiBarang(Transaksi object, ArrayList<Transaksi_barang> list){
-
-        daoTransaksi.insert(object);
-        ArrayList<Transaksi> list_found = daoTransaksi.getAllCustTransaction(String.valueOf(object.getID_customer()));
-        Transaksi tr = list_found.getLast();
+        BigInteger id = daoTransaksi.insertAndGetID(object);
         for (int i = 0; i < list.size(); i++) {
-            list.get(i).setID_transaksi(tr.getID_transaksi());
+            list.get(i).setID_transaksi(id);
             daoTransaksiBarang.insert(list.get(i));
         }
     }
@@ -38,6 +37,6 @@ public class Controller_Transaksi {
     }
     public void delete(String id){
         daoTransaksi.delete(id);
-        daoTransaksiBarang.deleteAllTransaction(id);
+        controllerTransaksiBarang.deleteAllTransaction(id);
     }
 }

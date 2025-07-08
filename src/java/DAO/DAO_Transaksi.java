@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import koneksi.Database;
 import model.Transaksi;
+import java.math.BigInteger;
 /**
  *
  * @author edelweiss
@@ -23,10 +24,9 @@ public class DAO_Transaksi {
     Connection conn = Database.KoneksiDB();
     String INSERT = "INSERT INTO `Transaksi`(`ID_customer`, `Alamat_pengiriman`, `Telepon`, `Lunas`, `Tanggal_pembelian`,`Tanggal_pengiriman`) VALUES (?,?,?,?,?,?)";
     String UPDATE = "UPDATE `Transaksi` SET Alamat_pengiriman`='?',`Telepon`='?',`Lunas`='?',`Tanggal_pengiriman`='?',`Tabggal_pelunasan`='?' WHERE `ID_transaksi`='?'";
-    String SELECT = "SELECT * FROM Transaksi WHERE ID_transaksi LIKE ?";
+    String SELECT = "SELECT * FROM Transaksi WHERE ID_transaksi = ?";
     String DELETE = "DELETE FROM Transaksi WHERE ID_transaksi = ?";
     String ALL = "SELECT * FROM Transaksi";
-    String RECENT = "SELECT * FROM Transaksi WHERE ID_customer LIKE ?" ;
     
     public void insert(Transaksi object){
         try {
@@ -41,6 +41,27 @@ public class DAO_Transaksi {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public BigInteger insertAndGetID(Transaksi object){
+        BigInteger last_inserted_id = BigInteger.valueOf(0);
+        try {
+            PreparedStatement ps = conn.prepareStatement(INSERT);
+            ps.setString(1, String.valueOf(object.getID_customer()));
+            ps.setObject(2, object.getAlamat_pengiriman());
+            ps.setObject(3, object.getTelepon());
+            ps.setObject(4, 0);
+            ps.setObject(5, sql.format(new Date()));
+            ps.setObject(6, sql.format(object.getTanggal_pengiriman()));
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            
+            if(rs.next()){
+                last_inserted_id = rs.getBigDecimal(1).toBigInteger();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return last_inserted_id;
     }
     
     public void update(Transaksi object){
@@ -69,36 +90,12 @@ public class DAO_Transaksi {
             e.printStackTrace();
         }
     }
-    public ArrayList<Transaksi> getAllCustTransaction(String key) {
-        ArrayList<Transaksi> list = new ArrayList<>();
-        try {
-            PreparedStatement st = conn.prepareStatement(RECENT);
-            st.setString(1, key);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Transaksi objTransaksi = new Transaksi();
-                objTransaksi.setID_transaksi(rs.getBigDecimal("ID_transaksi").toBigInteger());
-                objTransaksi.setID_customer(rs.getInt("ID_customer"));
-                objTransaksi.setAlamat_pengiriman(rs.getString("Alamat_pengiriman"));
-                objTransaksi.setTelepon(rs.getString("Telepon"));
-                objTransaksi.setLunas(rs.getBoolean("Lunas"));
-                objTransaksi.setHTMLTanggal_pembelian(rs.getString("Tanggal_pembelian"));
-                objTransaksi.setHTMLTanggal_pengiriman(rs.getString("Tanggal_pengiriman"));
-                objTransaksi.setHTMLTanggal_pembayaran(rs.getString("Tabggal_pelunasan"));
-                list.add(objTransaksi);
-            }
-            st.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
     
     public ArrayList<Transaksi> getCari(String key) {
         ArrayList<Transaksi> list = new ArrayList<>();
         try {
             PreparedStatement st = conn.prepareStatement(SELECT);
-            st.setString(1, "%" + key + "%");
+            st.setString(1, key);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Transaksi objTransaksi = new Transaksi();
